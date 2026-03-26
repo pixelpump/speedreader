@@ -58,6 +58,10 @@ export default function Reader({ text, onReset }: ReaderProps) {
     intervalRef.current = setInterval(() => {
       setCurrentIndex(prev => {
         if (prev >= words.length - 1) {
+          if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+          }
           setIsPlaying(false);
           return prev;
         }
@@ -107,6 +111,21 @@ export default function Reader({ text, onReset }: ReaderProps) {
       setOrpWidth(orpRef.current.getBoundingClientRect().width);
     }
   }, [beforeORP, orpChar]);
+
+  // Recalculate widths on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (beforeRef.current) {
+        setBeforeWidth(beforeRef.current.getBoundingClientRect().width);
+      }
+      if (orpRef.current) {
+        setOrpWidth(orpRef.current.getBoundingClientRect().width);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-4">

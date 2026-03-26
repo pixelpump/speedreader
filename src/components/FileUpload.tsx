@@ -14,6 +14,10 @@ export default function FileUpload({ onFileLoad }: FileUploadProps) {
       const content = e.target?.result as string;
       onFileLoad(content);
     };
+    reader.onerror = () => {
+      console.error('Failed to read file');
+      alert('Failed to read file. Please try a different file.');
+    };
     reader.readAsText(file);
   }, [onFileLoad]);
 
@@ -22,10 +26,25 @@ export default function FileUpload({ onFileLoad }: FileUploadProps) {
     const file = event.dataTransfer.files[0];
     if (!file) return;
 
+    const validTypes = ['text/plain', 'text/markdown', 'text/x-markdown'];
+    const validExtensions = ['.txt', '.md', '.text'];
+    const fileName = file.name.toLowerCase();
+    const hasValidExtension = validExtensions.some(ext => fileName.endsWith(ext));
+    const hasValidType = validTypes.includes(file.type);
+
+    if (!hasValidExtension && !hasValidType) {
+      alert('Please drop a .txt or .md file only.');
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = (e) => {
       const content = e.target?.result as string;
       onFileLoad(content);
+    };
+    reader.onerror = () => {
+      console.error('Failed to read file');
+      alert('Failed to read file. Please try a different file.');
     };
     reader.readAsText(file);
   }, [onFileLoad]);
