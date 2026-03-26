@@ -6,7 +6,8 @@ A Chrome extension that allows you to send selected text from any webpage direct
 
 - Right-click any selected text on a webpage
 - Choose "Send to SpeedReader" from the context menu
-- Instantly opens SpeedReader with the selected text loaded
+- Instantly opens the bundled SpeedReader app in a new tab with the selected text loaded
+- **Works offline** - the entire app is bundled within the extension
 
 ## Installation
 
@@ -17,6 +18,8 @@ A Chrome extension that allows you to send selected text from any webpage direct
 3. Click "Load unpacked"
 4. Select the `Chrome Extension` folder from this project
 5. The extension is now installed and active
+
+**Note:** If you rebuild the main SpeedReader app (`npm run build`), you'll need to copy the new `dist/assets/` files to the extension folder to update the bundled app.
 
 ### Option 2: Install from Chrome Web Store (Production)
 
@@ -31,15 +34,13 @@ A Chrome extension that allows you to send selected text from any webpage direct
 
 ## Configuration
 
-Before using the extension, you may need to update the SpeedReader URL in `background.js`:
+No configuration required! The extension now bundles the entire SpeedReader app, so it works completely offline.
 
+If you want to use a hosted version instead, edit `background.js` and change:
 ```javascript
-const speedreaderUrl = 'https://your-speedreader-url.com';
+const readerUrl = chrome.runtime.getURL('reader.html');
 ```
-
-Replace this with:
-- Your local development URL (e.g., `http://localhost:5173`) for testing
-- Your production URL for the deployed app
+to your hosted URL.
 
 ## File Structure
 
@@ -49,6 +50,11 @@ Chrome Extension/
 ├── background.js      # Service worker for context menu
 ├── popup.html         # Extension popup UI
 ├── popup.js           # Popup functionality
+├── reader.html        # Entry point for bundled SpeedReader app
+├── favicon.svg        # App favicon
+├── assets/            # Bundled React app files
+│   ├── index-*.js     # Compiled JavaScript
+│   └── index-*.css    # Compiled styles
 ├── icons/
 │   ├── icon16.svg     # Toolbar icon (16x16)
 │   ├── icon48.svg     # Extension icon (48x48)

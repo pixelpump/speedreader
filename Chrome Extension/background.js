@@ -1,4 +1,3 @@
-// Background service worker for context menu
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: 'sendToSpeedReader',
@@ -11,13 +10,12 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === 'sendToSpeedReader' && info.selectionText) {
     const selectedText = info.selectionText;
     
-    // Get the speedreader URL - use the hosted version or local development
-    // For production, this should be the deployed URL
-    const speedreaderUrl = 'https://speedreader.example.com';
+    // Open the bundled SpeedReader app in a new tab
+    const readerUrl = chrome.runtime.getURL('reader.html');
     
-    // Open speedreader in a new tab with the text as a query parameter
+    // Pass text via URL parameter
     const encodedText = encodeURIComponent(selectedText);
-    const url = `${speedreaderUrl}?text=${encodedText}`;
+    const url = `${readerUrl}?text=${encodedText}`;
     
     chrome.tabs.create({ url });
   }

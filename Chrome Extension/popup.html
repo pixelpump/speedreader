@@ -108,14 +108,19 @@
     </ol>
   </div>
   
-  <a href="https://speedreader.example.com" target="_blank" class="button">
-    Open SpeedReader
-  </a>
+  <a href="#" id="openReader" class="button">Open SpeedReader</a>
   
   <div class="footer">
     Select text and right-click to speed read
   </div>
   
   <script src="popup.js"></script>
+  <script>
+    document.getElementById('openReader').addEventListener('click', (e) => {
+      e.preventDefault();
+      const readerUrl = chrome.runtime.getURL('reader.html');
+      chrome.tabs.create({ url: readerUrl });
+    });
+  </script>
 </body>
 </html>
