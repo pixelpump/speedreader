@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import FileUpload from './components/FileUpload';
 import Reader from './components/Reader';
 
@@ -14,6 +14,18 @@ function App() {
   const handleReset = useCallback(() => {
     setText('');
     setIsReading(false);
+  }, []);
+
+  // Check for text in URL query parameters (from Chrome extension)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const textFromUrl = params.get('text');
+    if (textFromUrl) {
+      setText(textFromUrl);
+      setIsReading(true);
+      // Clean up the URL without reloading
+      window.history.replaceState({}, '', window.location.pathname);
+    }
   }, []);
 
   return (
