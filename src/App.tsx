@@ -11,6 +11,18 @@ function App() {
     setIsReading(true);
   }, []);
 
+  const handleTestText = useCallback(async () => {
+    try {
+      const response = await fetch('/test.txt');
+      if (!response.ok) throw new Error('Failed to load test text');
+      const content = await response.text();
+      setText(content);
+      setIsReading(true);
+    } catch {
+      alert('Failed to load test text');
+    }
+  }, []);
+
   const handleReset = useCallback(() => {
     setText('');
     setIsReading(false);
@@ -36,6 +48,12 @@ function App() {
           <h1 className="text-4xl md:text-5xl font-light mb-2 tracking-tight">Speed Reader</h1>
           <p className="text-gray-400 mb-8 text-lg">Upload a text file to begin</p>
           <FileUpload onFileLoad={handleFileLoad} />
+          <button
+            onClick={handleTestText}
+            className="mt-6 px-6 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg transition-colors text-sm"
+          >
+            Test Text
+          </button>
         </div>
       ) : (
         <Reader text={text} onReset={handleReset} />
