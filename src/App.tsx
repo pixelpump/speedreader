@@ -13,7 +13,7 @@ function App() {
 
   const handleTestText = useCallback(async () => {
     try {
-      const response = await fetch('/test.txt');
+      const response = await fetch('/speedreader/test.txt');
       if (!response.ok) throw new Error('Failed to load test text');
       const content = await response.text();
       setText(content);
